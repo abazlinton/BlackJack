@@ -21,15 +21,16 @@ public class BlackJackScorer {
     public static int getHandScore(List<Card> cards){
         buildInitialCardScores();
         int handScore = 0;
+        boolean haveScoredFirstAceAs11 = false;
         for (Card card : cards){
             int cardScore = cardScores.get(card.getRank());
-            if (card.getRank() == Rank.ACE){
+            if (cardScore == 11) {
                 cardScores.put(Rank.ACE, 1);
+                haveScoredFirstAceAs11 = true;
             }
             handScore += cardScore;
         }
-        boolean haveScoredAnAceAs11 = cardScores.get(Rank.ACE) == 1;
-        if (handScore > 21 && haveScoredAnAceAs11){
+        if (handScore > 21 && haveScoredFirstAceAs11){
            handScore -= 10;
         }
         return handScore;

@@ -27,7 +27,7 @@ public class BlackJackScorerTest {
         Card ace3 = new Card(Rank.ACE, Suit.DIAMONDS);
         Card ten = new Card(Rank.TEN, Suit.DIAMONDS);
         Card eight = new Card(Rank.EIGHT, Suit.DIAMONDS);
-        ArrayList<Card> cards = new ArrayList<Card>();
+        ArrayList<Card> cards = new ArrayList<>();
         cards.add(ace1);
         cards.add(ace2);
         cards.add(ace3);

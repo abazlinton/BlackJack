@@ -25,8 +25,8 @@ public class BlackJackScorer {
         for (Card card : cards){
             int cardScore = cardScores.get(card.getRank());
             if (cardScore == 11) {
-                cardScores.put(Rank.ACE, 1);
                 haveScoredFirstAceAs11 = true;
+                cardScores.put(Rank.ACE, 1);
             }
             handScore += cardScore;
         }

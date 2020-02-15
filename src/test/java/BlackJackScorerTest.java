@@ -15,7 +15,7 @@ public class BlackJackScorerTest {
         ArrayList<Card> cards = new ArrayList<Card>();
         cards.add(ace1);
         cards.add(ace2);
-        int score = (new BlackJackScorer()).getHandScore(cards);
+        int score = BlackJackScorer.getHandScore(cards);
         assertEquals(12, score);
     }
 
@@ -33,7 +33,7 @@ public class BlackJackScorerTest {
         cards.add(ace3);
         cards.add(ten);
         cards.add(eight);
-        int score = (new BlackJackScorer()).getHandScore(cards);
+        int score = BlackJackScorer.getHandScore(cards);
         assertEquals(21, score);
     }
 

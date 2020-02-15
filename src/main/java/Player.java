@@ -1,13 +1,34 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Player implements IPlayer {
 
     private List<Card> cards;
+    private Boolean hasStuck;
+    private String name;
 
+    public Player(String name) {
+        this.name = name;
+        this.hasStuck = false;
+        this.cards = new ArrayList<Card>();
+    }
 
-    private Move nextMove;
+    public String getName() {
+        return name;
+    }
 
+    public Boolean getHasStuck() {
+        return hasStuck;
+    }
+
+    public void setHasStuck(Boolean hasStuck) {
+        this.hasStuck = hasStuck;
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
 
     public void addCard(Card card){
         this.cards.add(card);
@@ -19,15 +40,7 @@ public class Player implements IPlayer {
         }
     }
 
-    public void setNextMove(Move move){
-        this.nextMove = move;
-    }
-
-    public Move getNextMove() {
-        return nextMove;
-    }
-
-    public BlackJackMove getMove(List<Card> cards) {
+    public BlackJackMove getMove() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("What's your move? (S)tick (T)wist");
         String moveChoice = scanner.next().toUpperCase().substring(0, 1);

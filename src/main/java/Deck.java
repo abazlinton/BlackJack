@@ -6,6 +6,10 @@ public class Deck {
 
     private ArrayList<Card> cards;
 
+    public Deck() {
+        this.cards = new ArrayList<Card>();
+    }
+
     public void populate(){
         for (Suit suit : Suit.values()){
             for (Rank rank : Rank.values()) {
@@ -19,7 +23,7 @@ public class Deck {
     }
 
     public Card takeCard(){
-        return this.cards.get(0);
+        return this.cards.remove(0);
     }
 
     public List<Card> takeCards(int number){

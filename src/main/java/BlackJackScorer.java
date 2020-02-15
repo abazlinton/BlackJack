@@ -1,40 +1,38 @@
+import java.util.HashMap;
 import java.util.List;
 
 public class BlackJackScorer {
 
-    public boolean haveScoredAnAceAs11;
+    private static HashMap<Rank, Integer> cardScores;
 
-
-    public BlackJackScorer() {
-        this.haveScoredAnAceAs11 = false;
+    private static void buildInitialCardScores(){
+        cardScores = new HashMap<>();
+        for (Rank rank : Rank.values()){
+            if (rank == Rank.ACE){
+                cardScores.put(rank, 11);
+            } else if (rank.getIsFaceCard()){
+                cardScores.put(rank, 10);
+            } else {
+                cardScores.put(rank, rank.ordinal() + 1);
+            }
+        }
     }
 
-    public int getHandScore(List<Card> cards){
+    public static int getHandScore(List<Card> cards){
+        buildInitialCardScores();
         int handScore = 0;
         for (Card card : cards){
-            handScore += getCardScore(card);
+            int cardScore = cardScores.get(card.getRank());
+            if (card.getRank() == Rank.ACE){
+                cardScores.put(Rank.ACE, 1);
+            }
+            handScore += cardScore;
         }
+        boolean haveScoredAnAceAs11 = cardScores.get(Rank.ACE) == 1;
         if (handScore > 21 && haveScoredAnAceAs11){
            handScore -= 10;
         }
         return handScore;
-    }
-
-    public int getCardScore(Card card){
-        int cardScore;
-        if (card.getRank() == Rank.ACE){
-            if (!haveScoredAnAceAs11) {
-                cardScore = 11;
-                this.haveScoredAnAceAs11 = true;
-            } else {
-                cardScore = 1;
-            }
-        } else if (card.getRank().getIsFaceCard()) {
-            cardScore = 10;
-        } else {
-            cardScore = card.getRank().ordinal() + 1;
-        }
-        return cardScore;
     }
 
 

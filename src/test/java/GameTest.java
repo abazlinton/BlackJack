@@ -31,8 +31,7 @@ public class GameTest {
 
     @Test
     public void test_full_game_twist_won(){
-        Player testPlayer = new Player("Alex");
-        // Alex will Stick immediately
+        Player testPlayer = new Player("Alex"); 
         Readable readable = new StringReader("T T S");
         Writable writable = new CaptureOutput();
         GameIO gameIO = new GameIO(readable, writable);

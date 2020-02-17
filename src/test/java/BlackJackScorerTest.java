@@ -1,3 +1,5 @@
+import enums.Rank;
+import enums.Suit;
 import org.junit.Test;
 
 import java.util.ArrayList;

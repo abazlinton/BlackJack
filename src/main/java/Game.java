@@ -1,3 +1,7 @@
+import enums.BlackJackMove;
+import enums.PlayerState;
+import enums.WinState;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +37,7 @@ public class Game {
         this.dealer.addCards(this.deck.takeCards(2));
     }
 
-    public PlayerState getPlayerState(Player player){
+    public static PlayerState getPlayerState(Player player){
         int playerScore = BlackJackScorer.getHandScore(player.getCards());
         boolean has21 = playerScore == 21;
         boolean hasBlackJack = has21 && player.getCards().size() == 2;
@@ -50,41 +54,20 @@ public class Game {
         }
     }
 
-    public String getHandDescription(List<Card> cards){
-        String handDescription = "";
-        for (Card card : cards){
-            handDescription += card.getCardDescription() + " ";
-        }
-        return handDescription;
-    }
-
-    public void outputPlayerDetails(Player player){
-        int playerScore = BlackJackScorer.getHandScore(player.getCards());
-        String output = player.getName() + ": " + getHandDescription(player.getCards()) + "- " + playerScore;
-        System.out.println(output);
-    }
-
-    public void runTurn(Player player) {
-        while (this.getPlayerState(player) == PlayerState.ACTIVE){
-            outputPlayerDetails(player);
+    public void runPlayerTurn(Player player) {
+        while (Game.getPlayerState(player) == PlayerState.ACTIVE){
+            GameLogger.outputPlayerDetails(player);
             BlackJackMove move = player.getMove();
             if (move == BlackJackMove.TWIST) {
                 Card drawnCard = this.deck.takeCard();
                 player.addCard(drawnCard);
-                System.out.println("Drew: " + drawnCard.getCardDescription());
+                GameLogger.outputDrawnCard(drawnCard);
             } else if (move == BlackJackMove.STICK) {
                 player.setHasStuck(true);
             }
         }
-        outputPlayerDetails(player);
-        if (this.getPlayerState(player) == PlayerState.BUST){
-            System.out.println("*** " + player.getName() + " is Bust! ***");
-        }
-        if (this.getPlayerState(player) == PlayerState.BLACKJACK){
-            System.out.println("*** " + player.getName() + " has BlackJack! ***");
-        } else if (this.getPlayerState(player) == PlayerState.SCORE21) {
-            System.out.println("***" + player.getName() + " has 21! ***");
-        }
+        GameLogger.outputPlayerDetails(player);
+        GameLogger.outputDrama(player);
     }
 
     public void runDealerTurn(){
@@ -101,22 +84,22 @@ public class Game {
         if (BlackJackScorer.getHandScore(dealer.getCards()) < 21 ){
             dealer.setHasStuck(true);
         }
-        outputPlayerDetails(dealer);
+        GameLogger.outputPlayerDetails(dealer);
+        GameLogger.outputDrama(dealer);
     }
 
     public void runGame(){
         for (Player player : this.players){
-            runTurn(player);
+            runPlayerTurn(player);
         }
         runDealerTurn();
     }
 
-
     public void summarizeGame(){
-        System.out.println("Dealer has " + BlackJackScorer.getHandScore(this.dealer.getCards()));
-        PlayerState dealerState = this.getPlayerState(dealer);
+        GameLogger.outputPlayerHand(this.dealer);
+        PlayerState dealerState = Game.getPlayerState(dealer);
         for (Player player : this.players){
-            PlayerState playerState = this.getPlayerState(player);
+            PlayerState playerState = Game.getPlayerState(player);
             if (playerState == PlayerState.BUST){
                 player.setWinState(WinState.DEALER);
             } else if (dealerState.ordinal() <  playerState.ordinal()){
@@ -134,19 +117,8 @@ public class Game {
                     player.setWinState(WinState.DRAW);
                 }
             }
-            System.out.println(player.getName() + " has " + BlackJackScorer.getHandScore(player.getCards()));
-            String playerName = player.getName();
-            if (player.getWinState() == WinState.PLAYER){
-                System.out.println(playerName + " Won!");
-            } else if (player.getWinState() == WinState.DEALER){
-                System.out.println(playerName + " Lost!");
-            } else {
-                System.out.println(playerName + " Drew!");
-            }
-
+            GameLogger.outputPlayerHand(player);
+            GameLogger.outputOutcome(player);
         }
     }
-
-
-
 }

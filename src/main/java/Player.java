@@ -1,8 +1,11 @@
+import enums.BlackJackMove;
+import enums.WinState;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Player implements IPlayer {
+public class Player {
 
     private List<Card> cards;
     private Boolean hasStuck;

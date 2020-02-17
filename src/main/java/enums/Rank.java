@@ -1,3 +1,5 @@
+package enums;
+
 public enum Rank {
     ACE(false),
     TWO(false),

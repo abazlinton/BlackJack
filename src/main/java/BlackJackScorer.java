@@ -1,3 +1,5 @@
+import enums.Rank;
+
 import java.util.HashMap;
 import java.util.List;
 

@@ -7,11 +7,21 @@ public class Player implements IPlayer {
     private List<Card> cards;
     private Boolean hasStuck;
     private String name;
+    private WinState winState;
 
     public Player(String name) {
         this.name = name;
         this.hasStuck = false;
         this.cards = new ArrayList<Card>();
+        this.winState = null;
+    }
+
+    public WinState getWinState() {
+        return winState;
+    }
+
+    public void setWinState(WinState winState) {
+        this.winState = winState;
     }
 
     public String getName() {
@@ -42,7 +52,7 @@ public class Player implements IPlayer {
 
     public BlackJackMove getMove() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("What's your move? (S)tick (T)wist");
+        System.out.println(this.getName() + " - What's your move? (S)tick (T)wist");
         String moveChoice = scanner.next().toUpperCase().substring(0, 1);
         if (moveChoice.equals("S")){
             return BlackJackMove.STICK;

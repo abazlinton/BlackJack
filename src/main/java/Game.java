@@ -58,11 +58,15 @@ public class Game {
         return handDescription;
     }
 
+    public void outputPlayerDetails(Player player){
+        int playerScore = BlackJackScorer.getHandScore(player.getCards());
+        String output = player.getName() + ": " + getHandDescription(player.getCards()) + "- " + playerScore;
+        System.out.println(output);
+    }
+
     public void runTurn(Player player) {
         while (this.getPlayerState(player) == PlayerState.ACTIVE){
-            int playerScore = BlackJackScorer.getHandScore(player.getCards());
-            System.out.println(player.getName() + ": " + String.valueOf(playerScore));
-            System.out.println(this.getHandDescription(player.getCards()));
+            outputPlayerDetails(player);
             BlackJackMove move = player.getMove();
             if (move == BlackJackMove.TWIST) {
                 Card drawnCard = this.deck.takeCard();
@@ -72,39 +76,74 @@ public class Game {
                 player.setHasStuck(true);
             }
         }
+        outputPlayerDetails(player);
+        if (this.getPlayerState(player) == PlayerState.BUST){
+            System.out.println("*** " + player.getName() + " is Bust! ***");
+        }
+        if (this.getPlayerState(player) == PlayerState.BLACKJACK){
+            System.out.println("*** " + player.getName() + " has BlackJack! ***");
+        } else if (this.getPlayerState(player) == PlayerState.SCORE21) {
+            System.out.println("***" + player.getName() + " has 21! ***");
+        }
     }
 
-    public void runPlayerTurn(){
+    public void runDealerTurn(){
+        boolean allPlayersBust = true;
+        for (Player player : this.players){
+            if (getPlayerState(player) != PlayerState.BUST){
+                allPlayersBust = false;
+            }
+        }
+        if (allPlayersBust) return;
         while (BlackJackScorer.getHandScore(dealer.getCards()) < 17) {
             dealer.addCard(this.deck.takeCard());
         }
         if (BlackJackScorer.getHandScore(dealer.getCards()) < 21 ){
             dealer.setHasStuck(true);
         }
+        outputPlayerDetails(dealer);
     }
 
     public void runGame(){
         for (Player player : this.players){
             runTurn(player);
         }
-        runPlayerTurn();
+        runDealerTurn();
     }
 
 
     public void summarizeGame(){
-        System.out.println("Dealer has: " + BlackJackScorer.getHandScore(this.dealer.getCards()));
-        System.out.println(getHandDescription(this.dealer.getCards()));
-        if (this.getPlayerState(dealer) == PlayerState.BLACKJACK){
-            System.out.println("BlackJack!!");
-        }
+        System.out.println("Dealer has " + BlackJackScorer.getHandScore(this.dealer.getCards()));
         PlayerState dealerState = this.getPlayerState(dealer);
         for (Player player : this.players){
             PlayerState playerState = this.getPlayerState(player);
-            if (dealerState == PlayerState.BUST){
-                if (playerState != PlayerState.BUST){
-                    System.out.println(player.getName() + "Wins");
+            if (playerState == PlayerState.BUST){
+                player.setWinState(WinState.DEALER);
+            } else if (dealerState.ordinal() <  playerState.ordinal()){
+                player.setWinState(WinState.DEALER);
+            } else if (playerState.ordinal() < dealerState.ordinal()){
+                player.setWinState(WinState.PLAYER);
+            } else if (playerState == dealerState && playerState == PlayerState.STUCK){
+                int playerScore = BlackJackScorer.getHandScore(player.getCards());
+                int dealerScore = BlackJackScorer.getHandScore(this.dealer.getCards());
+                if (playerScore > dealerScore){
+                    player.setWinState(WinState.PLAYER);
+                } else if (dealerScore > playerScore) {
+                    player.setWinState(WinState.DEALER);
+                } else {
+                    player.setWinState(WinState.DRAW);
                 }
             }
+            System.out.println(player.getName() + " has " + BlackJackScorer.getHandScore(player.getCards()));
+            String playerName = player.getName();
+            if (player.getWinState() == WinState.PLAYER){
+                System.out.println(playerName + " Won!");
+            } else if (player.getWinState() == WinState.DEALER){
+                System.out.println(playerName + " Lost!");
+            } else {
+                System.out.println(playerName + " Drew!");
+            }
+
         }
     }
 

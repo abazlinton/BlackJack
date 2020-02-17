@@ -71,8 +71,8 @@ public class Game {
     public void runGame(){
         PlayerState currentPlayerState = this.getPlayerState(this.currentPlayer);
         int playerScore = BlackJackScorer.getHandScore(this.currentPlayer.getCards());
+        System.out.println(this.currentPlayer.getName() + ": " + String.valueOf(playerScore));
         if (currentPlayerState == PlayerState.ACTIVE){
-            System.out.println(this.currentPlayer.getName() + ": " + String.valueOf(playerScore));
             BlackJackMove move = this.currentPlayer.getMove();
             if (move == BlackJackMove.TWIST){
                 Card drawnCard = this.deck.takeCard();
@@ -81,17 +81,14 @@ public class Game {
                 runGame();
             } else if (move == BlackJackMove.STICK) {
                 this.currentPlayer.setHasStuck(true);
-                runGame();
-            }
-        } else {
-            if (isGameOver()) {
-                System.out.println(this.currentPlayer.getName() + ": " + String.valueOf(playerScore));
-                return;
-            } else {
-                System.out.println(this.currentPlayer.getName() + ": " + String.valueOf(playerScore));
                 nextPlayer();
                 runGame();
             }
+        } else if (currentPlayerState == PlayerState.BUST) {
+            nextPlayer();
+            runGame();
+        } else if (isGameOver()) {
+            System.out.println(this.currentPlayer.getName() + ": " + String.valueOf(playerScore));
         }
     }
 

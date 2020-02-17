@@ -19,6 +19,7 @@ public class GameTest {
         Game game = new Game(gameIO);
         game.addPlayer(testPlayer);
         game.populateDeck();
+        // don't shuffle
         game.start();
         // Alex has Ah 2h - 13
         // Dealer has 3h 4h 5h 6h - 18
@@ -31,21 +32,25 @@ public class GameTest {
 
     @Test
     public void test_full_game_twist_won(){
-        Player testPlayer = new Player("Alex"); 
+        Player testPlayer = new Player("Alex");
         Readable readable = new StringReader("T T S");
         Writable writable = new CaptureOutput();
         GameIO gameIO = new GameIO(readable, writable);
         Game game = new Game(gameIO);
         game.addPlayer(testPlayer);
         game.populateDeck();
+        // don't shuffle
         game.start();
-        // Alex has Ah 2h 3h 4h - 20
-        // Dealer has 5h 6h 7h - 18
+        // Alex has Ah 2h 5h 6h - 14
+        // Dealer has 3h 4h 8h 9h - 22
         game.runGame();
         game.summarizeGame();
         CaptureOutput captureOutput = (CaptureOutput) writable;
         String lastLine = captureOutput.getLines().get(captureOutput.getLines().size() - 1 );
         assertEquals("Alex Won!", lastLine);
     }
+
+
+    
 
 }

@@ -4,7 +4,8 @@ public class Runner {
     public static void main(String[] args) {
         Player testPlayer = new Player("Alex");
         Player testPlayer2 = new Player("Bob");
-        Game game = new Game();
+        GameIO gameIO = new GameIO(System.in);
+        Game game = new Game(gameIO);
         game.addPlayer(testPlayer);
         game.addPlayer(testPlayer2);
         game.populateDeck();

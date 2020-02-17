@@ -10,8 +10,10 @@ public class Game {
     private Deck deck;
     private List<Player> players;
     private Player dealer;
+    private GameIO gameIO;
 
-    public Game() {
+    public Game(GameIO gameIO) {
+        this.gameIO = gameIO;
         this.players = new ArrayList<Player>();
         this.dealer = new Player("Dealer");
     }
@@ -56,18 +58,18 @@ public class Game {
 
     public void runPlayerTurn(Player player) {
         while (Game.getPlayerState(player) == PlayerState.ACTIVE){
-            GameLogger.outputPlayerDetails(player);
-            BlackJackMove move = player.getMove();
+            this.gameIO.outputPlayerDetails(player);
+            BlackJackMove move = this.gameIO.getPlayerMove(player);
             if (move == BlackJackMove.TWIST) {
                 Card drawnCard = this.deck.takeCard();
                 player.addCard(drawnCard);
-                GameLogger.outputDrawnCard(drawnCard);
+                this.gameIO.outputDrawnCard(drawnCard);
             } else if (move == BlackJackMove.STICK) {
                 player.setHasStuck(true);
             }
         }
-        GameLogger.outputPlayerDetails(player);
-        GameLogger.outputDrama(player);
+        this.gameIO.outputPlayerDetails(player);
+        this.gameIO.outputDrama(player);
     }
 
     public void runDealerTurn(){
@@ -84,8 +86,8 @@ public class Game {
         if (BlackJackScorer.getHandScore(dealer.getCards()) < 21 ){
             dealer.setHasStuck(true);
         }
-        GameLogger.outputPlayerDetails(dealer);
-        GameLogger.outputDrama(dealer);
+        this.gameIO.outputPlayerDetails(dealer);
+        this.gameIO.outputDrama(dealer);
     }
 
     public void runGame(){
@@ -96,7 +98,7 @@ public class Game {
     }
 
     public void summarizeGame(){
-        GameLogger.outputPlayerHand(this.dealer);
+        this.gameIO.outputPlayerHand(this.dealer);
         PlayerState dealerState = Game.getPlayerState(dealer);
         for (Player player : this.players){
             PlayerState playerState = Game.getPlayerState(player);
@@ -117,8 +119,8 @@ public class Game {
                     player.setWinState(WinState.DRAW);
                 }
             }
-            GameLogger.outputPlayerHand(player);
-            GameLogger.outputOutcome(player);
+            this.gameIO.outputPlayerHand(player);
+            this.gameIO.outputOutcome(player);
         }
     }
 }

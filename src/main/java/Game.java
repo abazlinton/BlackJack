@@ -56,7 +56,7 @@ public class Game {
         }
     }
 
-    public void runPlayerTurn(Player player) {
+    private void runPlayerTurn(Player player) {
         while (Game.getPlayerState(player) == PlayerState.ACTIVE){
             this.gameIO.outputPlayerDetails(player);
             BlackJackMove move = this.gameIO.getPlayerMove(player);
@@ -72,7 +72,7 @@ public class Game {
         this.gameIO.outputDrama(player);
     }
 
-    public void runDealerTurn(){
+    private void runDealerTurn(){
         boolean dealerShouldPlay = false;
         for (Player player : this.players){
             if (getPlayerState(player) != PlayerState.BUST){

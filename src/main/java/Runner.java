@@ -11,6 +11,6 @@ public class Runner {
         game.shuffleDeck();
         game.start();
         game.runGame();
-        game.huh();
+        game.summarizeGame();
     }
 }

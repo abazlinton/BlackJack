@@ -88,13 +88,13 @@ public class Game {
     }
 
     public void runDealerTurn(){
-        boolean allPlayersBust = true;
+        boolean dealerShouldPlay = false;
         for (Player player : this.players){
             if (getPlayerState(player) != PlayerState.BUST){
-                allPlayersBust = false;
+                dealerShouldPlay = true;
             }
         }
-        if (allPlayersBust) return;
+        if (!dealerShouldPlay) return;
         while (BlackJackScorer.getHandScore(dealer.getCards()) < 17) {
             dealer.addCard(this.deck.takeCard());
         }
